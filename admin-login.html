@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login — Mir's Study Space</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body style="background:linear-gradient(135deg,#0f2040 0%,#1a3a5c 100%);min-height:100vh;">
+
+<nav class="navbar scrolled" style="background:rgba(255,255,255,0.05);backdrop-filter:blur(12px);">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">M</div>
+      <div>
+        <span class="logo-title" style="color:#fff;">Mir's Study Space</span>
+        <span class="logo-sub" style="color:rgba(255,255,255,0.5);">Admin Portal</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" style="color:rgba(255,255,255,0.7);">← Home</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="form-page" style="background:transparent;">
+  <div class="form-card form-card-sm">
+    <div class="form-logo">
+      <div class="logo-icon" style="background:linear-gradient(135deg,#e8a020,#f4c842);">
+        <i class="fas fa-shield-alt" style="font-size:22px;color:#1a3a5c;"></i>
+      </div>
+      <h1>Admin Access</h1>
+      <p>Secure login for centre administrators</p>
+    </div>
+
+    <form id="adminLoginForm">
+      <div class="form-group">
+        <label><i class="fas fa-user-shield" style="color:var(--accent);margin-right:6px;"></i> Admin Username</label>
+        <input type="text" id="adminUser" placeholder="Enter admin username" required/>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-lock" style="color:var(--accent);margin-right:6px;"></i> Password</label>
+        <div style="position:relative;">
+          <input type="password" id="adminPwd" placeholder="Admin password" required style="padding-right:48px;"/>
+          <button type="button" onclick="togglePwd()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-light);cursor:pointer;font-size:16px;">
+            <i class="fas fa-eye" id="eyeIcon"></i>
+          </button>
+        </div>
+      </div>
+      <button type="submit" class="btn-primary btn-full" style="margin-top:8px;">
+        <i class="fas fa-sign-in-alt"></i> Login as Admin
+      </button>
+    </form>
+
+    <hr class="form-divider"/>
+    <div class="form-link"><a href="student-login.html" style="color:var(--accent2);"><i class="fas fa-user"></i> Student Login instead</a></div>
+
+    <div style="margin-top:20px;padding:14px;background:rgba(232,160,32,0.08);border:1px solid rgba(232,160,32,0.2);border-radius:10px;font-size:13px;color:var(--text-light);text-align:center;">
+      <i class="fas fa-key" style="color:var(--accent);"></i>
+      Default credentials: <strong>admin</strong> / <strong>mir123</strong>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/main.js"></script>
+<script>
+// Default admin credentials (in real app, use server-side auth)
+const ADMIN_CREDENTIALS = { username: 'admin', password: 'mir123' };
+
+function togglePwd() {
+  const inp = document.getElementById('adminPwd');
+  const icon = document.getElementById('eyeIcon');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  icon.className = inp.type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+}
+
+document.getElementById('adminLoginForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const user = document.getElementById('adminUser').value.trim();
+  const pwd = document.getElementById('adminPwd').value;
+  if (user === ADMIN_CREDENTIALS.username && pwd === ADMIN_CREDENTIALS.password) {
+    localStorage.setItem('mss_admin', 'true');
+    showToast('✅ Admin login successful!');
+    setTimeout(() => { window.location.href = 'admin-dashboard.html'; }, 1200);
+  } else {
+    showToast('❌ Invalid credentials. Try admin / mir123', 'error');
+  }
+});
+</script>
+</body>
+</html>

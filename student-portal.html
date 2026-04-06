@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Portal — Mir's Study Space</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<nav class="navbar scrolled" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">M</div>
+      <div>
+        <span class="logo-title">Mir's Study Space</span>
+        <span class="logo-sub">Student Portal</span>
+      </div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#" onclick="logout()" class="nav-login"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<div class="student-portal">
+  <div style="max-width:1100px;margin:0 auto;" id="portalContent">
+    <div style="text-align:center;padding:60px;color:var(--text-light);">
+      <i class="fas fa-spinner fa-spin" style="font-size:32px;"></i>
+      <p style="margin-top:16px;">Loading your portal...</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/main.js"></script>
+<script>
+function logout() {
+  localStorage.removeItem('mss_current_student');
+  window.location.href = 'student-login.html';
+}
+
+function renderPortal(student) {
+  const feeHistory = student.feeHistory || [];
+  const totalPaid = feeHistory.reduce((s, f) => s + Number(f.amount), 0);
+  const totalDue = Number(student.totalFee || 0) - totalPaid;
+
+  let feeTimelineHTML = feeHistory.length
+    ? feeHistory.map(f => `
+        <div class="fee-item">
+          <div class="fee-dot"></div>
+          <div>
+            <div class="fee-date">${f.date}</div>
+            <div class="fee-amount">₹${Number(f.amount).toLocaleString()}</div>
+            <div class="fee-mode">${f.mode} ${f.note ? '— ' + f.note : ''}</div>
+          </div>
+        </div>`).join('')
+    : '<p style="color:var(--text-light);font-size:14px;">No payment records yet.</p>';
+
+  let subjectsHTML = (student.subjects || []).map(s => `
+    <span style="display:inline-block;background:rgba(26,58,92,0.08);color:var(--primary);padding:4px 12px;border-radius:50px;font-size:13px;font-weight:600;margin:3px;">${s}</span>
+  `).join('') || '<span style="color:var(--text-light);font-size:14px;">Not specified</span>';
+
+  document.getElementById('portalContent').innerHTML = `
+    <div class="portal-header">
+      <div>
+        <h1>My Study Portal</h1>
+        <p style="color:var(--text-light);font-size:14px;">ID: ${student.id}</p>
+      </div>
+      <button onclick="logout()" class="btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+
+    <div class="welcome-banner">
+      <div>
+        <h2>Welcome back, ${student.fullName.split(' ')[0]}! 👋</h2>
+        <p>Class: ${student.studentClass} &nbsp;|&nbsp; Batch: ${student.batch || 'Not assigned'} &nbsp;|&nbsp; Joined: ${student.joinDate}</p>
+      </div>
+      <div class="wb-icon"><i class="fas fa-graduation-cap"></i></div>
+    </div>
+
+    <!-- Fee Overview Cards -->
+    <div class="stats-cards" style="margin-bottom:24px;">
+      <div class="stat-card">
+        <div class="stat-card-icon green"><i class="fas fa-check-circle"></i></div>
+        <div>
+          <div class="stat-card-num">₹${totalPaid.toLocaleString()}</div>
+          <div class="stat-card-label">Total Paid</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon red"><i class="fas fa-exclamation-circle"></i></div>
+        <div>
+          <div class="stat-card-num">₹${totalDue > 0 ? totalDue.toLocaleString() : '0'}</div>
+          <div class="stat-card-label">Amount Due</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon yellow"><i class="fas fa-receipt"></i></div>
+        <div>
+          <div class="stat-card-num">${feeHistory.length}</div>
+          <div class="stat-card-label">Payments Made</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon blue"><i class="fas fa-tag"></i></div>
+        <div>
+          <div class="stat-card-num"><span class="badge ${student.feeStatus === 'Paid' ? 'badge-green' : student.feeStatus === 'Partial' ? 'badge-yellow' : 'badge-red'}">${student.feeStatus || 'Pending'}</span></div>
+          <div class="stat-card-label">Fee Status</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="portal-grid">
+      <!-- Personal Info -->
+      <div class="info-card">
+        <h3><i class="fas fa-user"></i> Personal Information</h3>
+        <div class="info-row"><span class="label">Full Name</span><span class="value">${student.fullName}</span></div>
+        <div class="info-row"><span class="label">Date of Birth</span><span class="value">${student.dob}</span></div>
+        <div class="info-row"><span class="label">Gender</span><span class="value">${student.gender}</span></div>
+        <div class="info-row"><span class="label">Father's Name</span><span class="value">${student.fatherName}</span></div>
+        <div class="info-row"><span class="label">Phone</span><span class="value">${student.phone}</span></div>
+        <div class="info-row"><span class="label">Parent Phone</span><span class="value">${student.parentPhone}</span></div>
+        <div class="info-row"><span class="label">Address</span><span class="value">${student.address || '—'}</span></div>
+      </div>
+
+      <!-- Academic Info -->
+      <div class="info-card">
+        <h3><i class="fas fa-book"></i> Academic Details</h3>
+        <div class="info-row"><span class="label">Class</span><span class="value">${student.studentClass}</span></div>
+        <div class="info-row"><span class="label">School</span><span class="value">${student.school}</span></div>
+        <div class="info-row"><span class="label">Batch</span><span class="value">${student.batch || '—'}</span></div>
+        <div class="info-row"><span class="label">Join Date</span><span class="value">${student.joinDate}</span></div>
+        <div class="info-row"><span class="label">Status</span><span class="value"><span class="badge badge-green">${student.status || 'Active'}</span></span></div>
+        <div style="margin-top:16px;">
+          <div class="label" style="margin-bottom:10px;">Subjects Enrolled</div>
+          <div>${subjectsHTML}</div>
+        </div>
+      </div>
+
+      <!-- Fee History -->
+      <div class="info-card" style="grid-column: 1 / -1;">
+        <h3><i class="fas fa-history"></i> Fee Payment History</h3>
+        <div class="fee-timeline">${feeTimelineHTML}</div>
+        ${totalDue > 0 ? `<div style="margin-top:20px;padding:16px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);border-radius:10px;font-size:14px;color:#dc2626;display:flex;align-items:center;gap:10px;">
+          <i class="fas fa-exclamation-triangle"></i>
+          You have a pending fee of <strong>₹${totalDue.toLocaleString()}</strong>. Please contact Mir's Study Space to clear dues.
+        </div>` : ''}
+      </div>
+
+      <!-- Contact Centre -->
+      <div class="info-card" style="grid-column: 1 / -1; background: var(--gradient); color: #fff;">
+        <h3 style="color:#fff;"><i class="fas fa-phone-alt"></i> Contact Your Centre</h3>
+        <div style="display:flex;gap:40px;flex-wrap:wrap;margin-top:12px;">
+          <div><div style="font-size:12px;opacity:0.7;margin-bottom:4px;">Address</div><div style="font-weight:600;">Main Chowk Sangam, Near Petrol Pump</div></div>
+          <div><div style="font-size:12px;opacity:0.7;margin-bottom:4px;">Phone</div><div style="font-weight:600;"><a href="tel:9906600020" style="color:#f4c842;text-decoration:none;">99066XXX20</a></div></div>
+          <div><div style="font-size:12px;opacity:0.7;margin-bottom:4px;">Timings</div><div style="font-weight:600;">7AM–10AM &nbsp;|&nbsp; 4PM–8PM</div></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// On page load
+window.addEventListener('DOMContentLoaded', () => {
+  const phone = localStorage.getItem('mss_current_student');
+  if (!phone) { window.location.href = 'student-login.html'; return; }
+  const students = JSON.parse(localStorage.getItem('mss_students') || '[]');
+  const student = students.find(s => s.phone === phone);
+  if (!student) { localStorage.removeItem('mss_current_student'); window.location.href = 'student-login.html'; return; }
+  renderPortal(student);
+});
+</script>
+</body>
+</html>

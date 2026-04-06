@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Login — Mir's Study Space</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body style="background: linear-gradient(135deg, #1a3a5c 0%, #2a5298 100%); min-height:100vh;">
+
+<nav class="navbar scrolled" id="navbar" style="background:rgba(255,255,255,0.1);backdrop-filter:blur(12px);">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">M</div>
+      <div>
+        <span class="logo-title" style="color:#fff;">Mir's Study Space</span>
+        <span class="logo-sub" style="color:rgba(255,255,255,0.6);">Centre of Excellence</span>
+      </div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html" style="color:rgba(255,255,255,0.8);">← Home</a></li>
+      <li><a href="register.html" class="nav-cta">Register Now</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<div class="form-page" style="background:transparent;">
+  <div class="form-card form-card-sm">
+    <div class="form-logo">
+      <div class="logo-icon">M</div>
+      <h1>Student Login</h1>
+      <p>Access your personal study portal</p>
+    </div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label><i class="fas fa-phone" style="color:var(--accent);margin-right:6px;"></i> Phone Number</label>
+        <input type="tel" id="loginPhone" placeholder="Registered phone number" required/>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-lock" style="color:var(--accent);margin-right:6px;"></i> Password</label>
+        <div style="position:relative;">
+          <input type="password" id="loginPassword" placeholder="Your password" required style="padding-right:48px;"/>
+          <button type="button" onclick="togglePwd('loginPassword', this)" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-light);cursor:pointer;font-size:16px;">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
+      <button type="submit" class="btn-primary btn-full" style="margin-top:8px;">
+        <i class="fas fa-sign-in-alt"></i> Login to Portal
+      </button>
+    </form>
+
+    <hr class="form-divider"/>
+    <div class="form-link">New student? <a href="register.html">Register here</a></div>
+    <div class="form-link" style="margin-top:8px;"><a href="admin-login.html" style="color:var(--accent2);"><i class="fas fa-shield-alt"></i> Admin Login</a></div>
+
+    <!-- Demo hint -->
+    <div style="margin-top:20px;padding:14px;background:rgba(232,160,32,0.08);border:1px solid rgba(232,160,32,0.2);border-radius:10px;font-size:13px;color:var(--text-light);text-align:center;">
+      <i class="fas fa-info-circle" style="color:var(--accent);"></i>
+      Register first, then login with your phone number and password.
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/main.js"></script>
+<script>
+function togglePwd(id, btn) {
+  const inp = document.getElementById(id);
+  if (inp.type === 'password') {
+    inp.type = 'text'; btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+  } else {
+    inp.type = 'password'; btn.innerHTML = '<i class="fas fa-eye"></i>';
+  }
+}
+
+document.getElementById('loginForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const phone = document.getElementById('loginPhone').value.trim();
+  const pwd = document.getElementById('loginPassword').value;
+  const students = JSON.parse(localStorage.getItem('mss_students') || '[]');
+  const student = students.find(s => s.phone === phone);
+  if (!student) { showToast('No student found with this phone number.', 'error'); return; }
+  if (student.password !== btoa(pwd)) { showToast('Incorrect password. Please try again.', 'error'); return; }
+  localStorage.setItem('mss_current_student', student.phone);
+  showToast('✅ Login successful! Redirecting...');
+  setTimeout(() => { window.location.href = 'student-portal.html'; }, 1500);
+});
+</script>
+</body>
+</html>
