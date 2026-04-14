@@ -7,6 +7,12 @@
   <link rel="stylesheet" href="css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <!-- Optional: Add other Firebase services as needed -->
+  <script src="js/firebase-config.js"></script>
 </head>
 <body>
 
@@ -33,6 +39,7 @@
     <button class="hamburger" id="hamburger"><i class="fas fa-bars"></i></button>
   </div>
 </nav>
+<div class="nav-overlay" id="navOverlay"></div>
 
 <!-- HERO -->
 <section class="hero" id="home">
@@ -42,25 +49,32 @@
     <div class="hero-orb orb3"></div>
     <div class="grid-overlay"></div>
   </div>
-  <div class="hero-left">
-    <div class="hero-badge"><i class="fas fa-star"></i> Sangam's Premier Study Space</div>
-    <!-- Cool Stickers -->
-    <div class="hero-stickers">
-      <div class="sticker sticker1"><i class="fas fa-graduation-cap"></i></div>
-      <div class="sticker sticker2"><i class="fas fa-book-open"></i></div>
-      <div class="sticker sticker3"><i class="fas fa-lightbulb"></i></div>
-      <div class="sticker sticker4"><i class="fas fa-trophy"></i></div>
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <div class="hero-badge"><i class="fas fa-star"></i> Sangam's Premier Study Space</div>
+      <div class="hero-stickers">
+        <div class="sticker sticker1"><i class="fas fa-graduation-cap"></i></div>
+        <div class="sticker sticker2"><i class="fas fa-book-open"></i></div>
+        <div class="sticker sticker3"><i class="fas fa-lightbulb"></i></div>
+        <div class="sticker sticker4"><i class="fas fa-trophy"></i></div>
+      </div>
+      <h1 class="hero-title">
+        Shape Your<br/>
+        <span class="gradient-text">Future</span><br/>
+        Here.
+      </h1>
+      <p class="hero-desc">Premium study cabins with 24/7 access, quiet focus zones, and high-speed internet in Sangam.</p>
+      <div class="hero-btns">
+        <a href="register.html" class="btn-primary"><i class="fas fa-pen-nib"></i> Enroll Today</a>
+        <a href="#features" class="btn-outline">Explore Features</a>
+      </div>
     </div>
-  </div>
-  <div class="hero-center">
-    <h1 class="hero-title">
-      Shape Your<br/>
-      <span class="gradient-text">Future</span><br/>
-      Here.
-    </h1>
-    <div class="hero-btns">
-      <a href="register.html" class="btn-primary"><i class="fas fa-pen-nib"></i> Enroll Today</a>
-      <a href="#features" class="btn-outline">Explore Features</a>
+    <div class="hero-visual">
+      <div class="hero-illustration">
+        <div class="floating-card card1"><i class="fas fa-book"></i> Focused Study</div>
+        <div class="floating-card card2"><i class="fas fa-clock"></i> Anytime Access</div>
+        <div class="floating-card card3"><i class="fas fa-wifi"></i> Free WiFi</div>
+      </div>
     </div>
   </div>
 </section>
@@ -228,6 +242,11 @@
         <form class="enquiry-form" onsubmit="handleEnquiry(event)">
           <input type="text" placeholder="Your Name" required />
           <input type="tel" placeholder="Phone Number" required />
+          <select>
+            <option value="">Membership Interest</option>
+            <option>Hourly Pass</option><option>Daily Pass</option><option>Weekly Pass</option>
+            <option>Monthly Pass</option><option>Quarterly Pass</option><option>Yearly Pass</option>
+          </select>
           <textarea placeholder="Your Message (optional)" rows="3"></textarea>
           <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Send Enquiry</button>
         </form>
