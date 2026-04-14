@@ -1,11 +1,11 @@
-// Production Firebase configuration
+//  Firebase configuration
 const firebaseConfig = {
-  apiKey: "YOUR_PRODUCTION_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDA3n3HpztsHDcbUCcdiJLq7qLMtxTavAc",
+  authDomain: "library-f6459.firebaseapp.com",
+  projectId: "library-f6459",
+  storageBucket: "library-f6459.firebasestorage.app",
+  messagingSenderId: "570089349286",
+  appId: "1:570089349286:web:e3dadd4efa340cab5e1467"
 };
 
 // Initialize Firebase using compat scripts
