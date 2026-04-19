@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="css/style.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -15,7 +14,6 @@
 </head>
 <body>
 
-<!-- Mobile sidebar toggle -->
 <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
@@ -31,16 +29,16 @@
     </div>
     <ul class="sidebar-nav">
       <li class="nav-section">Dashboard</li>
-      <li><a href="#" class="active" onclick="(async()=>{await showSection('dashboard',this)})()"><i class="fas fa-home"></i> Overview</a></li>
+      <li><a href="#" class="active" onclick="showSection('dashboard',this);return false;"><i class="fas fa-home"></i> Overview</a></li>
       <li class="nav-section">Students</li>
-      <li><a href="#" onclick="(async()=>{await showSection('students',this)})()"><i class="fas fa-users"></i> All Students</a></li>
-      <li><a href="#" onclick="(async()=>{await showSection('addStudent',this)})()"><i class="fas fa-user-plus"></i> Add Student</a></li>
+      <li><a href="#" onclick="showSection('students',this);return false;"><i class="fas fa-users"></i> All Students</a></li>
+      <li><a href="#" onclick="showSection('addStudent',this);return false;"><i class="fas fa-user-plus"></i> Add Student</a></li>
       <li class="nav-section">Finance</li>
-      <li><a href="#" onclick="(async()=>{await showSection('fees',this)})()"><i class="fas fa-rupee-sign"></i> Fee Records</a></li>
-      <li><a href="#" onclick="(async()=>{await showSection('addFee',this)})()"><i class="fas fa-plus-circle"></i> Record Payment</a></li>
+      <li><a href="#" onclick="showSection('fees',this);return false;"><i class="fas fa-rupee-sign"></i> Fee Records</a></li>
+      <li><a href="#" onclick="showSection('addFee',this);return false;"><i class="fas fa-plus-circle"></i> Record Payment</a></li>
       <li class="nav-section">System</li>
       <li><a href="index.html"><i class="fas fa-globe"></i> View Website</a></li>
-      <li><a href="#" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      <li><a href="#" onclick="adminLogout();return false;"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
     </ul>
   </aside>
 
@@ -53,13 +51,15 @@
         <div><h1>Dashboard Overview</h1><p>Welcome back, Admin!</p></div>
         <span id="dashDate" style="font-size:14px;color:var(--text-light);"></span>
       </div>
-      <div class="stats-cards" id="statsCards"></div>
+      <div class="stats-cards" id="statsCards">
+        <div class="stat-card"><div class="stat-card-icon blue"><i class="fas fa-spinner fa-spin"></i></div><div><div class="stat-card-num">—</div><div class="stat-card-label">Loading...</div></div></div>
+      </div>
       <div class="data-table-wrap">
         <div class="table-header">
           <h3>Recent Registrations</h3>
-          <a href="#" onclick="(async()=>{await showSection('students')})()" style="font-size:14px;color:var(--primary);text-decoration:none;font-weight:600;">View All →</a>
+          <a href="#" onclick="showSection('students');return false;" style="font-size:14px;color:var(--primary);text-decoration:none;font-weight:600;">View All →</a>
         </div>
-        <div id="recentStudentsTable"></div>
+        <div id="recentStudentsTable"><div style="padding:32px;text-align:center;color:var(--text-light);"><i class="fas fa-spinner fa-spin"></i> Loading...</div></div>
       </div>
     </div>
 
@@ -67,7 +67,7 @@
     <div id="sec-students" class="hidden">
       <div class="page-header">
         <div><h1>All Students</h1><p id="studentCountLabel">Loading...</p></div>
-        <button class="btn-primary" onclick="(async()=>{await showSection('addStudent')})()"><i class="fas fa-plus"></i> Add Student</button>
+        <button class="btn-primary" onclick="showSection('addStudent')"><i class="fas fa-plus"></i> Add Student</button>
       </div>
       <div class="data-table-wrap">
         <div class="table-header">
@@ -76,10 +76,8 @@
             <input type="text" placeholder="🔍 Search by name, class, phone..." id="studentSearch" oninput="renderStudentsTable()"/>
             <select id="classFilter" onchange="renderStudentsTable()" style="padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;">
               <option value="">All Classes</option>
-              <option>Class 6</option><option>Class 7</option><option>Class 8</option>
-              <option>Class 9</option><option>Class 10</option>
-              <option>Class 11 (Science)</option><option>Class 11 (Commerce)</option>
-              <option>Class 12 (Science)</option><option>Class 12 (Commerce)</option>
+              <option>Neet</option><option>SSB</option><option>UPSC</option>
+              <option>Board exams</option><option>Others</option>
             </select>
           </div>
         </div>
@@ -91,7 +89,7 @@
     <div id="sec-addStudent" class="hidden">
       <div class="page-header">
         <div><h1>Add New Student</h1><p>Enter student details manually</p></div>
-        <button class="btn-secondary" onclick="(async()=>{await showSection('students')})()"><i class="fas fa-arrow-left"></i> Back</button>
+        <button class="btn-secondary" onclick="showSection('students')"><i class="fas fa-arrow-left"></i> Back</button>
       </div>
       <div style="max-width:700px;">
         <div class="data-table-wrap" style="padding:32px;">
@@ -123,10 +121,11 @@
                 <select id="as_feeStatus"><option>Pending</option><option>Partial</option><option>Paid</option></select>
               </div>
             </div>
-            <div class="form-group" style="font-size:13px;color:var(--text-light);margin-bottom:16px;">
-              Student login password is automatically set to DOB in YYYY-MM-DD format.
+            <div class="form-group" style="font-size:13px;color:var(--text-light);margin-bottom:16px;padding:12px;background:var(--bg);border-radius:8px;">
+              <i class="fas fa-info-circle" style="color:var(--accent);"></i>
+              Student login password is automatically set to their DOB in YYYY-MM-DD format.
             </div>
-            <button type="submit" class="btn-primary"><i class="fas fa-user-plus"></i> Add Student</button>
+            <button type="submit" class="btn-primary" id="addStudentBtn"><i class="fas fa-user-plus"></i> Add Student</button>
           </form>
         </div>
       </div>
@@ -136,7 +135,7 @@
     <div id="sec-fees" class="hidden">
       <div class="page-header">
         <div><h1>Fee Records</h1><p>All payment transactions</p></div>
-        <button class="btn-primary" onclick="(async()=>{await showSection('addFee')})()"><i class="fas fa-plus"></i> Record Payment</button>
+        <button class="btn-primary" onclick="showSection('addFee')"><i class="fas fa-plus"></i> Record Payment</button>
       </div>
       <div class="stats-cards" id="feeStatsCards"></div>
       <div class="data-table-wrap">
@@ -154,7 +153,7 @@
     <div id="sec-addFee" class="hidden">
       <div class="page-header">
         <div><h1>Record Fee Payment</h1><p>Add a payment for a student</p></div>
-        <button class="btn-secondary" onclick="(async()=>{await showSection('fees')})()"><i class="fas fa-arrow-left"></i> Back</button>
+        <button class="btn-secondary" onclick="showSection('fees')"><i class="fas fa-arrow-left"></i> Back</button>
       </div>
       <div style="max-width:500px;">
         <div class="data-table-wrap" style="padding:32px;">
@@ -174,10 +173,7 @@
               <label>Payment Mode *</label>
               <select id="fee_mode" required>
                 <option value="">Select</option>
-                <option>Cash</option>
-                <option>UPI</option>
-                <option>Bank Transfer</option>
-                <option>Cheque</option>
+                <option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Cheque</option>
               </select>
             </div>
             <div class="form-group"><label>UPI/Transaction Ref (optional)</label><input type="text" id="fee_ref" placeholder="e.g. UPI ref number"/></div>
@@ -186,7 +182,7 @@
               <label>Update Fee Status</label>
               <select id="fee_status"><option>Partial</option><option>Paid</option><option>Pending</option></select>
             </div>
-            <button type="submit" class="btn-primary btn-full"><i class="fas fa-check"></i> Record Payment</button>
+            <button type="submit" class="btn-primary btn-full" id="recordFeeBtn"><i class="fas fa-check"></i> Record Payment</button>
           </form>
         </div>
       </div>
@@ -219,11 +215,6 @@
 
 <div class="toast" id="toast"></div>
 
-<style>
-.hidden { display: none !important; }
-.sidebar-nav li.nav-section { font-size:10px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,0.4);padding:16px 16px 8px;font-weight:700; }
-</style>
-
 <script src="js/main.js"></script>
 <script>
 // ===== AUTH CHECK =====
@@ -246,58 +237,80 @@ async function showSection(name, linkEl) {
   if (name === 'students') await renderStudentsTable();
   if (name === 'fees') await renderFeeSection();
   if (name === 'addFee') await populateStudentDropdown();
-  if (name === 'addStudent') { const d=new Date(); document.getElementById('as_joinDate').value = d.toISOString().split('T')[0]; }
+  if (name === 'addStudent') {
+    document.getElementById('as_joinDate').value = new Date().toISOString().split('T')[0];
+  }
 }
 
 // ===== DATA HELPERS =====
+// Get all students from Firestore
 async function getStudents() {
   try {
-    const snapshot = await db.collection('students').get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  } catch (error) {
-    console.error('Error getting students:', error);
-    return [];
+    const snapshot = await db.collection('students').orderBy('createdAt', 'desc').get();
+    return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+  } catch (err) {
+    // orderBy requires index — fall back if not yet created
+    try {
+      const snapshot = await db.collection('students').get();
+      return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    } catch (e) {
+      console.error('Error getting students:', e);
+      return [];
+    }
   }
 }
 
-async function saveStudents(students) {
-  try {
-    const batch = db.batch();
-    // Clear existing
-    const existing = await db.collection('students').get();
-    existing.docs.forEach(doc => batch.delete(doc.ref));
-    // Add new
-    students.forEach(student => {
-      const ref = db.collection('students').doc();
-      batch.set(ref, { ...student, id: ref.id });
-    });
-    await batch.commit();
-  } catch (error) {
-    console.error('Error saving students:', error);
-    throw error;
-  }
+// Update a single student document (safe — does NOT touch other docs)
+async function updateStudent(studentId, data) {
+  await db.collection('students').doc(studentId).update(data);
 }
 
+// Get all payments by flattening feeHistory across students
 async function getAllPayments() {
-  const students = await getStudents();
-  return students.flatMap(s => (s.feeHistory||[]).map(f => ({ ...f, studentName: s.fullName, studentId: s.id, studentPhone: s.phone, studentClass: s.studentClass })));
+  const students = await getStudents();   // properly awaited
+  return students.flatMap(s =>
+    (s.feeHistory || []).map(f => ({
+      ...f,
+      studentName: s.fullName,
+      studentId: s.id,
+      studentPhone: s.phone,
+      studentClass: s.studentClass
+    }))
+  );
 }
 
 // ===== DASHBOARD =====
 async function renderDashboard() {
+  document.getElementById('dashDate').textContent = new Date().toLocaleDateString('en-IN', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+
   const students = await getStudents();
-  document.getElementById('dashDate').textContent = new Date().toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-  const totalPaid = (await getAllPayments()).reduce((s,f) => s + Number(f.amount), 0);
+  const payments = await getAllPayments();
+  const totalPaid = payments.reduce((s, f) => s + Number(f.amount), 0);
   const due = students.filter(s => s.feeStatus !== 'Paid').length;
+  const today = new Date().toISOString().split('T')[0];
 
   document.getElementById('statsCards').innerHTML = `
-    <div class="stat-card"><div class="stat-card-icon blue"><i class="fas fa-users"></i></div><div><div class="stat-card-num">${students.length}</div><div class="stat-card-label">Total Students</div></div></div>
-    <div class="stat-card"><div class="stat-card-icon green"><i class="fas fa-rupee-sign"></i></div><div><div class="stat-card-num">₹${totalPaid.toLocaleString()}</div><div class="stat-card-label">Total Collected</div></div></div>
-    <div class="stat-card"><div class="stat-card-icon yellow"><i class="fas fa-exclamation-circle"></i></div><div><div class="stat-card-num">${due}</div><div class="stat-card-label">Fee Pending</div></div></div>
-    <div class="stat-card"><div class="stat-card-icon red"><i class="fas fa-calendar"></i></div><div><div class="stat-card-num">${students.filter(s=>s.joinDate===new Date().toISOString().split('T')[0]).length}</div><div class="stat-card-label">Joined Today</div></div></div>
+    <div class="stat-card">
+      <div class="stat-card-icon blue"><i class="fas fa-users"></i></div>
+      <div><div class="stat-card-num">${students.length}</div><div class="stat-card-label">Total Students</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon green"><i class="fas fa-rupee-sign"></i></div>
+      <div><div class="stat-card-num">₹${totalPaid.toLocaleString()}</div><div class="stat-card-label">Total Collected</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon yellow"><i class="fas fa-exclamation-circle"></i></div>
+      <div><div class="stat-card-num">${due}</div><div class="stat-card-label">Fee Pending</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon red"><i class="fas fa-calendar"></i></div>
+      <div><div class="stat-card-num">${students.filter(s => s.joinDate === today).length}</div><div class="stat-card-label">Joined Today</div></div>
+    </div>
   `;
 
-  const recent = [...students].reverse().slice(0, 6);
+  const recent = students.slice(0, 6);
   document.getElementById('recentStudentsTable').innerHTML = buildStudentTable(recent, true);
 }
 
@@ -306,7 +319,11 @@ async function renderStudentsTable() {
   const q = (document.getElementById('studentSearch')?.value || '').toLowerCase();
   const cf = document.getElementById('classFilter')?.value || '';
   let students = await getStudents();
-  if (q) students = students.filter(s => s.fullName.toLowerCase().includes(q) || s.phone.includes(q) || s.studentClass.toLowerCase().includes(q));
+  if (q) students = students.filter(s =>
+    s.fullName.toLowerCase().includes(q) ||
+    s.phone.includes(q) ||
+    (s.studentClass || '').toLowerCase().includes(q)
+  );
   if (cf) students = students.filter(s => s.studentClass === cf);
   document.getElementById('studentCountLabel').textContent = `${students.length} student(s) found`;
   document.getElementById('allStudentsTable').innerHTML = buildStudentTable(students, false);
@@ -317,22 +334,21 @@ function buildStudentTable(students, mini) {
   return `<div style="overflow-x:auto;"><table>
     <thead><tr>
       <th>Student ID</th><th>Name</th><th>Class</th><th>Phone</th>
-      <th>Join Date</th><th>Fee Status</th>${mini ? '' : '<th>Batch</th>'}<th>Actions</th>
+      <th>Join Date</th><th>Fee Status</th><th>Actions</th>
     </tr></thead>
     <tbody>
     ${students.map(s => `
       <tr>
         <td><code style="font-size:12px;color:var(--primary);">${s.id}</code></td>
         <td><strong>${s.fullName}</strong><br/><span style="font-size:12px;color:var(--text-light);">${s.email || ''}</span></td>
-        <td>${s.studentClass}</td>
+        <td>${s.studentClass || '—'}</td>
         <td>${s.phone}</td>
-        <td>${s.joinDate}</td>
-        <td><span class="badge ${s.feeStatus==='Paid'?'badge-green':s.feeStatus==='Partial'?'badge-yellow':'badge-red'}">${s.feeStatus||'Pending'}</span></td>
-        ${mini ? '' : `<td>${s.batch||'—'}</td>`}
+        <td>${s.joinDate || '—'}</td>
+        <td><span class="badge ${s.feeStatus === 'Paid' ? 'badge-green' : s.feeStatus === 'Partial' ? 'badge-yellow' : 'badge-red'}">${s.feeStatus || 'Pending'}</span></td>
         <td><div class="action-btns">
-          <button class="action-btn view" onclick="(async()=>{await viewStudent('${s.phone}')})()" title="View"><i class="fas fa-eye"></i></button>
-          <button class="action-btn edit" onclick="(async()=>{await editStudent('${s.phone}')})()" title="Edit"><i class="fas fa-edit"></i></button>
-          <button class="action-btn delete" onclick="deleteStudent('${s.phone}')" title="Delete"><i class="fas fa-trash"></i></button>
+          <button class="action-btn view" onclick="viewStudent('${s.id}')" title="View"><i class="fas fa-eye"></i></button>
+          <button class="action-btn edit" onclick="editStudent('${s.id}')" title="Edit"><i class="fas fa-edit"></i></button>
+          <button class="action-btn delete" onclick="deleteStudent('${s.id}')" title="Delete"><i class="fas fa-trash"></i></button>
         </div></td>
       </tr>`).join('')}
     </tbody>
@@ -340,46 +356,58 @@ function buildStudentTable(students, mini) {
 }
 
 // ===== VIEW STUDENT MODAL =====
-async function viewStudent(phone) {
-  const students = await getStudents();
-  const student = students.find(s => s.phone === phone);
-  if (!student) return;
+async function viewStudent(studentId) {
+  const doc = await db.collection('students').doc(studentId).get();
+  if (!doc.exists) return;
+  const student = doc.data();
   const feeHistory = student.feeHistory || [];
-  const totalPaid = feeHistory.reduce((s,f)=>s+Number(f.amount),0);
+  const totalPaid = feeHistory.reduce((s, f) => s + Number(f.amount), 0);
+
   document.getElementById('modalStudentName').textContent = student.fullName;
   document.getElementById('modalBody').innerHTML = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
-      <div><div style="font-size:12px;color:var(--text-light);">Student ID</div><div style="font-weight:700;font-size:14px;">${student.id}</div></div>
-      <div><div style="font-size:12px;color:var(--text-light);">Class</div><div style="font-weight:700;">${student.studentClass}</div></div>
+      <div><div style="font-size:12px;color:var(--text-light);">Student ID</div><div style="font-weight:700;font-size:13px;">${student.id}</div></div>
+      <div><div style="font-size:12px;color:var(--text-light);">Class</div><div style="font-weight:700;">${student.studentClass || '—'}</div></div>
       <div><div style="font-size:12px;color:var(--text-light);">Phone</div><div style="font-weight:700;">${student.phone}</div></div>
-      <div><div style="font-size:12px;color:var(--text-light);">Email</div><div style="font-weight:700;">${student.email||'—'}</div></div>
-      <div><div style="font-size:12px;color:var(--text-light);">Purpose</div><div style="font-weight:700;">${student.purpose||'—'}</div></div>
-      <div><div style="font-size:12px;color:var(--text-light);">School</div><div style="font-weight:700;">${student.school||'—'}</div></div>
-      <div><div style="font-size:12px;color:var(--text-light);">Batch</div><div style="font-weight:700;">${student.batch||'—'}</div></div>
-      <div><div style="font-size:12px;color:var(--text-light);">Join Date</div><div style="font-weight:700;">${student.joinDate}</div></div>
-      <div><div style="font-size:12px;color:var(--text-light);">Address</div><div style="font-weight:700;">${student.address||'—'}</div></div>
+      <div><div style="font-size:12px;color:var(--text-light);">Email</div><div style="font-weight:700;">${student.email || '—'}</div></div>
+      <div><div style="font-size:12px;color:var(--text-light);">Purpose</div><div style="font-weight:700;">${student.purpose || '—'}</div></div>
+      <div><div style="font-size:12px;color:var(--text-light);">Join Date</div><div style="font-weight:700;">${student.joinDate || '—'}</div></div>
+      <div><div style="font-size:12px;color:var(--text-light);">Address</div><div style="font-weight:700;">${student.address || '—'}</div></div>
+      <div><div style="font-size:12px;color:var(--text-light);">Status</div><div style="font-weight:700;">${student.status || 'Active'}</div></div>
     </div>
     <div style="background:var(--bg);border-radius:10px;padding:16px;margin-bottom:16px;">
       <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
         <span style="font-size:13px;font-weight:700;">Fee Summary</span>
-        <span class="badge ${student.feeStatus==='Paid'?'badge-green':student.feeStatus==='Partial'?'badge-yellow':'badge-red'}">${student.feeStatus||'Pending'}</span>
+        <span class="badge ${student.feeStatus === 'Paid' ? 'badge-green' : student.feeStatus === 'Partial' ? 'badge-yellow' : 'badge-red'}">${student.feeStatus || 'Pending'}</span>
       </div>
       <div style="display:flex;gap:24px;">
-        <div><div style="font-size:12px;color:var(--text-light);">Total Fee</div><div style="font-weight:700;">₹${Number(student.totalFee||0).toLocaleString()}</div></div>
+        <div><div style="font-size:12px;color:var(--text-light);">Total Fee</div><div style="font-weight:700;">₹${Number(student.totalFee || 0).toLocaleString()}</div></div>
         <div><div style="font-size:12px;color:var(--text-light);">Paid</div><div style="font-weight:700;color:var(--accent2);">₹${totalPaid.toLocaleString()}</div></div>
-        <div><div style="font-size:12px;color:var(--text-light);">Due</div><div style="font-weight:700;color:#ef4444;">₹${Math.max(0,Number(student.totalFee||0)-totalPaid).toLocaleString()}</div></div>
+        <div><div style="font-size:12px;color:var(--text-light);">Due</div><div style="font-weight:700;color:#ef4444;">₹${Math.max(0, Number(student.totalFee || 0) - totalPaid).toLocaleString()}</div></div>
       </div>
     </div>
     <h4 style="margin-bottom:12px;font-size:14px;">Payment History (${feeHistory.length})</h4>
     ${feeHistory.length ? `<table style="width:100%;border-collapse:collapse;">
-      <thead><tr><th style="text-align:left;padding:8px;font-size:12px;background:var(--bg);">Date</th><th style="text-align:left;padding:8px;font-size:12px;background:var(--bg);">Amount</th><th style="text-align:left;padding:8px;font-size:12px;background:var(--bg);">Mode</th><th style="text-align:left;padding:8px;font-size:12px;background:var(--bg);">Note</th></tr></thead>
-      <tbody>${feeHistory.map(f=>`<tr><td style="padding:8px;font-size:13px;border-top:1px solid var(--border);">${f.date}</td><td style="padding:8px;font-size:13px;border-top:1px solid var(--border);font-weight:700;">₹${Number(f.amount).toLocaleString()}</td><td style="padding:8px;font-size:13px;border-top:1px solid var(--border);"><span class="badge badge-blue">${f.mode}</span></td><td style="padding:8px;font-size:13px;border-top:1px solid var(--border);color:var(--text-light);">${f.note||'—'}</td></tr>`).join('')}</tbody>
+      <thead><tr>
+        <th style="text-align:left;padding:8px;font-size:12px;background:var(--bg);">Date</th>
+        <th style="text-align:left;padding:8px;font-size:12px;background:var(--bg);">Amount</th>
+        <th style="text-align:left;padding:8px;font-size:12px;background:var(--bg);">Mode</th>
+        <th style="text-align:left;padding:8px;font-size:12px;background:var(--bg);">Note</th>
+      </tr></thead>
+      <tbody>${feeHistory.map(f => `
+        <tr>
+          <td style="padding:8px;font-size:13px;border-top:1px solid var(--border);">${f.date}</td>
+          <td style="padding:8px;font-size:13px;border-top:1px solid var(--border);font-weight:700;">₹${Number(f.amount).toLocaleString()}</td>
+          <td style="padding:8px;font-size:13px;border-top:1px solid var(--border);"><span class="badge badge-blue">${f.mode}</span></td>
+          <td style="padding:8px;font-size:13px;border-top:1px solid var(--border);color:var(--text-light);">${f.note || '—'}</td>
+        </tr>`).join('')}
+      </tbody>
     </table>` : '<p style="color:var(--text-light);font-size:14px;">No payments recorded yet.</p>'}
     <div style="margin-top:20px;display:flex;gap:10px;">
-      <button class="btn-primary" onclick="(async()=>{closeModal();await showSection('addFee');setTimeout(async()=>{document.getElementById('fee_student').value='${phone}';await updateStudentFeeInfo();},100)})()">
+      <button class="btn-primary" onclick="closeModal();showSection('addFee');setTimeout(()=>{document.getElementById('fee_student').value='${student.phone}';updateStudentFeeInfo();},300)">
         <i class="fas fa-plus"></i> Add Payment
       </button>
-      <button class="btn-secondary" onclick="(async()=>{closeModal();await editStudent('${phone}')})()"><i class="fas fa-edit"></i> Edit</button>
+      <button class="btn-secondary" onclick="closeModal();editStudent('${studentId}')"><i class="fas fa-edit"></i> Edit</button>
     </div>
   `;
   document.getElementById('studentModal').classList.add('open');
@@ -388,43 +416,44 @@ async function viewStudent(phone) {
 function closeModal() { document.getElementById('studentModal').classList.remove('open'); }
 
 // ===== EDIT STUDENT MODAL =====
-async function editStudent(phone) {
-  const students = await getStudents();
-  const student = students.find(s => s.phone === phone);
-  if (!student) return;
+async function editStudent(studentId) {
+  const doc = await db.collection('students').doc(studentId).get();
+  if (!doc.exists) return;
+  const s = doc.data();
+
   document.getElementById('editModalBody').innerHTML = `
-    <form onsubmit="saveEditStudent(event,'${phone}')">
+    <form onsubmit="saveEditStudent(event,'${studentId}')">
       <div class="form-row">
-        <div class="form-group"><label>Full Name</label><input type="text" id="edit_name" value="${student.fullName}" required/></div>
-        <div class="form-group"><label>Phone</label><input type="tel" id="edit_phone" value="${student.phone}" required/></div>
+        <div class="form-group"><label>Full Name</label><input type="text" id="edit_name" value="${s.fullName}" required/></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="edit_phone" value="${s.phone}" required/></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>Email</label><input type="email" id="edit_email" value="${student.email||''}" required/></div>
-        <div class="form-group"><label>Date of Birth</label><input type="date" id="edit_dob" value="${student.dob||''}" required/></div>
+        <div class="form-group"><label>Email</label><input type="email" id="edit_email" value="${s.email || ''}" required/></div>
+        <div class="form-group"><label>Date of Birth</label><input type="date" id="edit_dob" value="${s.dob || ''}" required/></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label>Class</label>
           <select id="edit_class">
-            ${['Neet','SSB','UPSC','Board exams','Others'].map(c=>`<option ${c===student.studentClass?'selected':''}>${c}</option>`).join('')}
+            ${['Neet','SSB','UPSC','Board exams','Others'].map(c => `<option ${c === s.studentClass ? 'selected' : ''}>${c}</option>`).join('')}
           </select>
         </div>
-        <div class="form-group"><label>Join Date</label><input type="date" id="edit_joinDate" value="${student.joinDate||''}" required/></div>
+        <div class="form-group"><label>Join Date</label><input type="date" id="edit_joinDate" value="${s.joinDate || ''}" required/></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>Fee Pending (₹)</label><input type="number" id="edit_totalFee" value="${student.totalFee||''}"/></div>
+        <div class="form-group"><label>Fee Pending (₹)</label><input type="number" id="edit_totalFee" value="${s.totalFee || ''}"/></div>
         <div class="form-group"><label>Fee Status</label>
           <select id="edit_feeStatus">
-            ${['Pending','Partial','Paid'].map(f=>`<option ${f===student.feeStatus?'selected':''}>${f}</option>`).join('')}
+            ${['Pending','Partial','Paid'].map(f => `<option ${f === s.feeStatus ? 'selected' : ''}>${f}</option>`).join('')}
           </select>
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>Address</label><input type="text" id="edit_address" value="${student.address||''}"/></div>
-        <div class="form-group"><label>Purpose of Study</label><input type="text" id="edit_purpose" value="${student.purpose||''}"/></div>
+        <div class="form-group"><label>Address</label><input type="text" id="edit_address" value="${s.address || ''}"/></div>
+        <div class="form-group"><label>Purpose of Study</label><input type="text" id="edit_purpose" value="${s.purpose || ''}"/></div>
       </div>
       <div class="form-group"><label>Status</label>
         <select id="edit_status">
-          ${['Active','Inactive','Left'].map(s=>`<option ${s===student.status?'selected':''}>${s}</option>`).join('')}
+          ${['Active','Inactive','Left'].map(st => `<option ${st === s.status ? 'selected' : ''}>${st}</option>`).join('')}
         </select>
       </div>
       <div style="display:flex;gap:10px;margin-top:8px;">
@@ -435,113 +464,140 @@ async function editStudent(phone) {
   document.getElementById('editModal').classList.add('open');
 }
 
-function saveEditStudent(e, phone) {
+async function saveEditStudent(e, studentId) {
   e.preventDefault();
-  (async () => {
-    const students = await getStudents();
-    const idx = students.findIndex(s => s.phone === phone);
-    if (idx === -1) return;
-    students[idx].fullName = document.getElementById('edit_name').value.trim();
-    students[idx].phone = document.getElementById('edit_phone').value.trim();
-    students[idx].email = document.getElementById('edit_email').value.trim().toLowerCase();
-    students[idx].dob = document.getElementById('edit_dob').value;
-    students[idx].password = document.getElementById('edit_dob').value;
-    students[idx].studentClass = document.getElementById('edit_class').value;
-    students[idx].joinDate = document.getElementById('edit_joinDate').value;
-    students[idx].feeStatus = document.getElementById('edit_feeStatus').value;
-    students[idx].totalFee = document.getElementById('edit_totalFee').value;
-    students[idx].address = document.getElementById('edit_address').value.trim();
-    students[idx].purpose = document.getElementById('edit_purpose').value.trim();
-    students[idx].status = document.getElementById('edit_status').value;
-    await saveStudents(students);
+  const dob = document.getElementById('edit_dob').value;
+  try {
+    // Update only this one document — safe, no data loss risk
+    await db.collection('students').doc(studentId).update({
+      fullName: document.getElementById('edit_name').value.trim(),
+      phone: document.getElementById('edit_phone').value.trim(),
+      email: document.getElementById('edit_email').value.trim().toLowerCase(),
+      dob: dob,
+      password: dob,   // keep password in sync with DOB
+      studentClass: document.getElementById('edit_class').value,
+      joinDate: document.getElementById('edit_joinDate').value,
+      feeStatus: document.getElementById('edit_feeStatus').value,
+      totalFee: document.getElementById('edit_totalFee').value,
+      address: document.getElementById('edit_address').value.trim(),
+      purpose: document.getElementById('edit_purpose').value.trim(),
+      status: document.getElementById('edit_status').value,
+    });
     closeEditModal();
     showToast('✅ Student updated successfully!');
     await renderStudentsTable();
-  })();
+  } catch (err) {
+    console.error('Update error:', err);
+    showToast('❌ Update failed. Try again.', 'error');
+  }
 }
 
 function closeEditModal() { document.getElementById('editModal').classList.remove('open'); }
 
 // ===== DELETE STUDENT =====
-async function deleteStudent(phone) {
+async function deleteStudent(studentId) {
   if (!confirm('Are you sure you want to delete this student? This cannot be undone.')) return;
-  const students = (await getStudents()).filter(s => s.phone !== phone);
-  await saveStudents(students);
-  showToast('Student deleted.', 'error');
-  await renderStudentsTable();
-  await renderDashboard();
+  try {
+    await db.collection('students').doc(studentId).delete();
+    showToast('Student deleted.', 'error');
+    await renderStudentsTable();
+    await renderDashboard();
+  } catch (err) {
+    showToast('❌ Delete failed.', 'error');
+  }
 }
 
 // ===== ADD STUDENT FORM =====
 document.getElementById('addStudentForm').addEventListener('submit', async e => {
   e.preventDefault();
-  const students = await getStudents();
   const phone = document.getElementById('as_phone').value.trim();
   const email = document.getElementById('as_email').value.trim().toLowerCase();
   const dob = document.getElementById('as_dob').value;
   if (!dob) { showToast('Please enter student DOB for login password.', 'error'); return; }
-  if (students.find(s => s.phone === phone)) { showToast('Student with this phone already exists.', 'error'); return; }
-  if (students.find(s => s.email === email)) { showToast('Student with this email already exists.', 'error'); return; }
-  const pwd = dob;
-  const student = {
-    id: 'MSS' + Date.now(),
-    fullName: document.getElementById('as_fullName').value.trim(),
-    phone,
-    email,
-    dob,
-    studentClass: document.getElementById('as_class').value,
-    joinDate: document.getElementById('as_joinDate').value,
-    totalFee: document.getElementById('as_totalFee').value,
-    feeStatus: document.getElementById('as_feeStatus').value,
-    address: document.getElementById('as_address').value.trim(),
-    purpose: document.getElementById('as_purpose').value.trim(),
-    password: pwd,
-    subjects: [], feeHistory: [], status: 'Active'
-  };
-  students.push(student);
-  await saveStudents(students);
-  showToast('✅ Student added! Login password is DOB in YYYY-MM-DD.');
-  document.getElementById('addStudentForm').reset();
-  document.getElementById('as_joinDate').value = new Date().toISOString().split('T')[0];
-  showSection('students');
+
+  const btn = document.getElementById('addStudentBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+
+  try {
+    const phoneCheck = await db.collection('students').where('phone', '==', phone).get();
+    if (!phoneCheck.empty) { showToast('Student with this phone already exists.', 'error'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-user-plus"></i> Add Student'; return; }
+
+    const emailCheck = await db.collection('students').where('email', '==', email).get();
+    if (!emailCheck.empty) { showToast('Student with this email already exists.', 'error'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-user-plus"></i> Add Student'; return; }
+
+    const studentId = 'MSS' + Date.now();
+    const student = {
+      id: studentId,
+      fullName: document.getElementById('as_fullName').value.trim(),
+      phone,
+      email,
+      dob,
+      studentClass: document.getElementById('as_class').value,
+      joinDate: document.getElementById('as_joinDate').value,
+      totalFee: document.getElementById('as_totalFee').value || 0,
+      feeStatus: document.getElementById('as_feeStatus').value,
+      address: document.getElementById('as_address').value.trim(),
+      purpose: document.getElementById('as_purpose').value.trim(),
+      password: dob,
+      subjects: [], feeHistory: [], status: 'Active',
+      createdAt: new Date().toISOString()
+    };
+
+    await db.collection('students').doc(studentId).set(student);
+    showToast('✅ Student added! Login password is DOB in YYYY-MM-DD.');
+    document.getElementById('addStudentForm').reset();
+    document.getElementById('as_joinDate').value = new Date().toISOString().split('T')[0];
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-user-plus"></i> Add Student';
+    showSection('students');
+  } catch (err) {
+    console.error('Add student error:', err);
+    showToast('❌ Failed to add student. Try again.', 'error');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-user-plus"></i> Add Student';
+  }
 });
 
 // ===== FEE SECTION =====
 async function renderFeeSection() {
-  const payments = getAllPayments();
-  const total = payments.reduce((s,f)=>s+Number(f.amount),0);
-  const thisMonth = payments.filter(f => f.date && f.date.startsWith(new Date().toISOString().slice(0,7)));
-  const thisMonthTotal = thisMonth.reduce((s,f)=>s+Number(f.amount),0);
-  const students = await getStudents();
+  const [students, payments] = await Promise.all([getStudents(), getAllPayments()]);
+  const total = payments.reduce((s, f) => s + Number(f.amount), 0);
+  const thisMonthPrefix = new Date().toISOString().slice(0, 7);
+  const thisMonthTotal = payments
+    .filter(f => f.date && f.date.startsWith(thisMonthPrefix))
+    .reduce((s, f) => s + Number(f.amount), 0);
 
   document.getElementById('feeStatsCards').innerHTML = `
     <div class="stat-card"><div class="stat-card-icon green"><i class="fas fa-rupee-sign"></i></div><div><div class="stat-card-num">₹${total.toLocaleString()}</div><div class="stat-card-label">Total Collected</div></div></div>
     <div class="stat-card"><div class="stat-card-icon blue"><i class="fas fa-calendar-check"></i></div><div><div class="stat-card-num">₹${thisMonthTotal.toLocaleString()}</div><div class="stat-card-label">This Month</div></div></div>
     <div class="stat-card"><div class="stat-card-icon yellow"><i class="fas fa-receipt"></i></div><div><div class="stat-card-num">${payments.length}</div><div class="stat-card-label">Total Transactions</div></div></div>
-    <div class="stat-card"><div class="stat-card-icon red"><i class="fas fa-users"></i></div><div><div class="stat-card-num">${students.filter(s=>s.feeStatus!=='Paid').length}</div><div class="stat-card-label">Pending Students</div></div></div>
+    <div class="stat-card"><div class="stat-card-icon red"><i class="fas fa-users"></i></div><div><div class="stat-card-num">${students.filter(s => s.feeStatus !== 'Paid').length}</div><div class="stat-card-label">Pending Students</div></div></div>
   `;
-  renderFeeTable();
+  renderFeeTable(payments);
 }
 
-function renderFeeTable() {
+// Cache payments for filter
+let _cachedPayments = [];
+async function renderFeeTable(payments) {
+  if (payments) _cachedPayments = payments;
   const q = (document.getElementById('feeSearch')?.value || '').toLowerCase();
-  let payments = getAllPayments().reverse();
-  if (q) payments = payments.filter(p => p.studentName.toLowerCase().includes(q) || p.studentPhone?.includes(q));
-
-  if (!payments.length) {
+  let list = [..._cachedPayments].reverse();
+  if (q) list = list.filter(p => p.studentName.toLowerCase().includes(q) || (p.studentPhone || '').includes(q));
+  if (!list.length) {
     document.getElementById('feeTable').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text-light);">No payment records found.</div>';
     return;
   }
   document.getElementById('feeTable').innerHTML = `<div style="overflow-x:auto;"><table>
     <thead><tr><th>Date</th><th>Student</th><th>Class</th><th>Amount</th><th>Mode</th><th>Reference</th><th>Note</th></tr></thead>
-    <tbody>${payments.map(p=>`<tr>
+    <tbody>${list.map(p => `<tr>
       <td>${p.date}</td>
       <td><strong>${p.studentName}</strong><br/><span style="font-size:12px;color:var(--text-light);">${p.studentPhone}</span></td>
-      <td>${p.studentClass}</td>
+      <td>${p.studentClass || '—'}</td>
       <td style="font-weight:700;color:var(--accent2);">₹${Number(p.amount).toLocaleString()}</td>
       <td><span class="badge badge-blue">${p.mode}</span></td>
-      <td style="font-size:12px;color:var(--text-light);">${p.ref||'—'}</td>
-      <td style="font-size:13px;color:var(--text-light);">${p.note||'—'}</td>
+      <td style="font-size:12px;color:var(--text-light);">${p.ref || '—'}</td>
+      <td style="font-size:13px;color:var(--text-light);">${p.note || '—'}</td>
     </tr>`).join('')}
     </tbody>
   </table></div>`;
@@ -549,54 +605,76 @@ function renderFeeTable() {
 
 // ===== RECORD FEE PAYMENT =====
 async function populateStudentDropdown() {
-  const sel = document.getElementById('fee_student');
   const students = await getStudents();
+  const sel = document.getElementById('fee_student');
   sel.innerHTML = '<option value="">-- Select Student --</option>' +
-    students.map(s=>`<option value="${s.phone}">${s.fullName} (${s.studentClass}) — ${s.phone}</option>`).join('');
+    students.map(s => `<option value="${s.phone}">${s.fullName} (${s.studentClass || '—'}) — ${s.phone}</option>`).join('');
   document.getElementById('fee_date').value = new Date().toISOString().split('T')[0];
 }
 
 async function updateStudentFeeInfo() {
   const phone = document.getElementById('fee_student').value;
   const info = document.getElementById('studentFeeInfo');
-  if (!phone) { info.style.display='none'; return; }
-  const students = await getStudents();
-  const student = students.find(s=>s.phone===phone);
-  if (!student) return;
-  const paid = (student.feeHistory||[]).reduce((s,f)=>s+Number(f.amount),0);
-  const due = Number(student.totalFee||0)-paid;
-  info.style.display='block';
-  info.innerHTML = `<strong>${student.fullName}</strong> — ${student.studentClass}<br/>
-    Total Fee: ₹${Number(student.totalFee||0).toLocaleString()} &nbsp;|&nbsp;
+  if (!phone) { info.style.display = 'none'; return; }
+  const snapshot = await db.collection('students').where('phone', '==', phone).get();
+  if (snapshot.empty) return;
+  const student = snapshot.docs[0].data();
+  const paid = (student.feeHistory || []).reduce((s, f) => s + Number(f.amount), 0);
+  const due = Number(student.totalFee || 0) - paid;
+  info.style.display = 'block';
+  info.innerHTML = `<strong>${student.fullName}</strong> — ${student.studentClass || '—'}<br/>
+    Total Fee: ₹${Number(student.totalFee || 0).toLocaleString()} &nbsp;|&nbsp;
     Paid: <span style="color:var(--accent2);font-weight:600;">₹${paid.toLocaleString()}</span> &nbsp;|&nbsp;
-    Due: <span style="color:${due>0?'#ef4444':'var(--accent2)'};font-weight:600;">₹${Math.max(0,due).toLocaleString()}</span>
-    &nbsp;<span class="badge ${student.feeStatus==='Paid'?'badge-green':student.feeStatus==='Partial'?'badge-yellow':'badge-red'}">${student.feeStatus||'Pending'}</span>`;
+    Due: <span style="color:${due > 0 ? '#ef4444' : 'var(--accent2)'};font-weight:600;">₹${Math.max(0, due).toLocaleString()}</span>
+    &nbsp;<span class="badge ${student.feeStatus === 'Paid' ? 'badge-green' : student.feeStatus === 'Partial' ? 'badge-yellow' : 'badge-red'}">${student.feeStatus || 'Pending'}</span>`;
 }
 
 document.getElementById('addFeeForm').addEventListener('submit', async e => {
   e.preventDefault();
   const phone = document.getElementById('fee_student').value;
   if (!phone) { showToast('Please select a student', 'error'); return; }
-  const students = await getStudents();
-  const idx = students.findIndex(s=>s.phone===phone);
-  if (idx===-1) return;
 
-  const payment = {
-    amount: document.getElementById('fee_amount').value,
-    date: document.getElementById('fee_date').value,
-    mode: document.getElementById('fee_mode').value,
-    ref: document.getElementById('fee_ref').value.trim(),
-    note: document.getElementById('fee_note').value.trim(),
-  };
-  if (!students[idx].feeHistory) students[idx].feeHistory=[];
-  students[idx].feeHistory.push(payment);
-  students[idx].feeStatus = document.getElementById('fee_status').value;
-  await saveStudents(students);
-  showToast(`✅ Payment of ₹${Number(payment.amount).toLocaleString()} recorded for ${students[idx].fullName}`);
-  document.getElementById('addFeeForm').reset();
-  document.getElementById('fee_date').value = new Date().toISOString().split('T')[0];
-  document.getElementById('studentFeeInfo').style.display='none';
-  showSection('fees');
+  const btn = document.getElementById('recordFeeBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Recording...';
+
+  try {
+    const snapshot = await db.collection('students').where('phone', '==', phone).get();
+    if (snapshot.empty) { showToast('Student not found', 'error'); return; }
+
+    const docRef = snapshot.docs[0].ref;
+    const student = snapshot.docs[0].data();
+
+    const payment = {
+      amount: document.getElementById('fee_amount').value,
+      date: document.getElementById('fee_date').value,
+      mode: document.getElementById('fee_mode').value,
+      ref: document.getElementById('fee_ref').value.trim(),
+      note: document.getElementById('fee_note').value.trim(),
+    };
+
+    const newHistory = [...(student.feeHistory || []), payment];
+    const newStatus = document.getElementById('fee_status').value;
+
+    // Update only this student document
+    await docRef.update({
+      feeHistory: newHistory,
+      feeStatus: newStatus
+    });
+
+    showToast(`✅ Payment of ₹${Number(payment.amount).toLocaleString()} recorded for ${student.fullName}`);
+    document.getElementById('addFeeForm').reset();
+    document.getElementById('fee_date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('studentFeeInfo').style.display = 'none';
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-check"></i> Record Payment';
+    showSection('fees');
+  } catch (err) {
+    console.error('Fee recording error:', err);
+    showToast('❌ Failed to record payment. Try again.', 'error');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-check"></i> Record Payment';
+  }
 });
 
 // ===== INIT =====
