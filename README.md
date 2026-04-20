@@ -1,91 +1,39 @@
-# 📚 Mir's Study Space — Web App
+# Mir's Study Space – Web App
 
-## 🗂️ FILE STRUCTURE (Save exactly like this in VS Code)
+This is a web application for Mir's Study Space study centre.  
+It has a public website, a student portal, and an admin dashboard for managing students and fees.
 
-```
-mirs-study-space/          ← Your main project folder
-│
-├── index.html             ← 🏠 Landing Page (Homepage)
-├── register.html          ← 📝 Student Registration
-├── student-login.html     ← 🔑 Student Login
-├── student-portal.html    ← 👤 Student Dashboard
-├── admin-login.html       ← 🛡️ Admin Login
-├── admin-dashboard.html   ← ⚙️ Admin Panel (Main control panel)
-│
-├── css/
-│   └── style.css          ← 🎨 All styles for the whole website
-│
-├── js/
-│   └── main.js            ← ⚡ JavaScript (navbar, animations, toast)
-│
-└── images/                ← 🖼️ ADD YOUR IMAGES HERE
-    ├── hero-student.png   ← Hero section image (right side of homepage)
-    ├── centre-photo.jpg   ← Photo of the study centre
-    ├── logo.png           ← Your centre logo (optional)
-    └── favicon.ico        ← Browser tab icon (optional)
-```
 
-## 🔑 LOGIN CREDENTIALS
+## 2. How to run locally
 
-**Admin Login:**
-- Username: `admin`
-- Password: `mir123`
-- URL: admin-login.html
+1. Install VS Code (optional but recommended).
+2. Open the project folder in VS Code.
+3. Use the **Live Server** extension, or open `index.html` directly in your browser.
+4. For best results, open `admin-login.html` and `student-login.html` through Live Server so all paths work correctly.
 
-**Student Login:**
-- Register first at register.html
-- Then login with phone number + password
+## 3. Main features
 
-## 🖼️ WHERE TO ADD IMAGES
+- Landing page with information about Mir's Study Space. 
+- Student registration form for adding new students. 
+- Student login with email and date-of-birth password. 
+- Student portal showing profile, class, fee status, and payment history. 
+- Admin login to secure the admin dashboard. 
+- Admin dashboard to:
+  - View total students and fee statistics.
+  - View, search, and edit students.
+  - Add new students.
+  - Record fee payments and see payment history.
 
-Open `index.html` and find these comments:
-```html
-<!-- Replace with: <img src="images/hero-student.png" alt="Students studying" /> -->
-<!-- Replace with: <img src="images/centre-photo.jpg" alt="Mir's Study Space" /> -->
-```
-Just swap the comment with an actual `<img>` tag pointing to your image.
+## 4. Firebase
 
-## 🚀 HOW TO RUN
+The app uses Firebase Firestore for storing students, admins, and fee history.
 
-1. Install VS Code extension: **"Live Server"** by Ritwick Dey
-2. Right-click on `index.html` → "Open with Live Server"
-3. Your website opens at http://127.0.0.1:5500
+- Firebase is initialized in `js/firebase-config-prod.js`.
+- The admin dashboard and student portal read and write data from the `students` and `admins` collections.
 
-## 📋 WHAT EACH PAGE DOES
+Make sure your Firestore rules allow the reads and writes you need.
 
-| File | Purpose |
-|------|---------|
-| index.html | Beautiful landing page with all info |
-| register.html | 3-step student registration form |
-| student-login.html | Students login with phone + password |
-| student-portal.html | Students see their info, fee status, history |
-| admin-login.html | Admin secure login |
-| admin-dashboard.html | Full admin panel: manage students, fees, payments |
+## 5. Deployment
 
-## ⚙️ ADMIN PANEL FEATURES
-
-- **Overview** — Total students, money collected, pending fees
-- **All Students** — See/search/filter all students, edit or delete
-- **Add Student** — Manually add student with all details
-- **Fee Records** — All payments with date, mode (Cash/UPI), reference
-- **Record Payment** — Add fee payment for any student
-
-## 💾 DATA STORAGE
-
-Currently uses browser `localStorage` (no server needed!).
-For a real deployment, you'd connect to a database like Firebase or MySQL.
-
-## 🔧 TO CHANGE PHONE NUMBER
-
-Open `index.html`, search for `99066XXX20` and replace with real number.
-Also update in `student-portal.html` footer section.
-
-## 🎨 TO CHANGE COLORS
-
-Open `css/style.css`, find `:root` at the top:
-```css
---primary: #1a3a5c;   ← Main dark blue
---accent: #e8a020;    ← Golden yellow
---accent2: #2ec4b6;   ← Teal green
-```
-Change these hex codes to any color you want.
+You can deploy this project to any static hosting service (for example, Vercel).  
+Upload the same folder structure shown above so all pages, CSS, JS, and Firebase config load correctly.
